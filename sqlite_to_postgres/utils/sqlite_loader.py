@@ -34,8 +34,8 @@ class SQLiteLoader:
 
     def load_writers_names(self) -> dict:
         writers = {}
-        for writer in self.conn.execute("SELECT DISTINCT id, name FROM writers"):
-            writers[writer["id"]] = writer
+        for writer in self.conn.execute('SELECT DISTINCT id, name FROM writers'):
+            writers[writer['id']] = writer
         return writers
 
     def transform_row(self, row: dict, writers: dict) -> dict:
