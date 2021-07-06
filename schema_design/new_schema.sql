@@ -10,10 +10,9 @@ CREATE TABLE IF NOT EXISTS content.film_work (
     id UUID PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT
-    creation_date DATE,
-    imdb_rating FLOAT,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    imdb_rating NUMERIC(2,1) CHECK (imdb_rating > 0),
+    created_at TIMESTAMP with time zone,
+    updated_at TIMESTAMP with time zone
 );
 
 CREATE TABLE IF NOT EXISTS content.genre (
