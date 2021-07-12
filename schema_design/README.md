@@ -19,3 +19,23 @@
    Это очень усложняет дальнейшую склейку `join` данных, чтобы, например, отправлять их в Elasticsearch.
 
 Ваша задача спроектировать новую схему для работы с данными, с которой будет удобно работать.
+
+# How to run?
+- поднимаем контейнер с докером:
+```
+docker run -d --rm \
+  --name postgres \
+  -p 5432:5432 \
+  -v /path/to/my/folder:/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD=postgres \
+  postgres:13 
+```
+- подключитесь к контейнеру:
+```
+docker exec -it postgres bash 
+```
+- перейдите в psql shell:
+```
+psql -U postgres 
+```
+- выполните код из 'new_schema.sql'

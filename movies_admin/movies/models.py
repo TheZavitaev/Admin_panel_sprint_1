@@ -36,6 +36,12 @@ class Genre(TimeStampedModel):
         return self.name
 
 
+class RoleType(models.TextChoices):
+    ACTOR = 'actor', _('актер')
+    WRITER = 'writer', _('сценарист')
+    DIRECTOR = 'director', _('режиссер')
+
+
 class FilmWorkType(models.TextChoices):
     MOVIE = 'film', _('фильм')
     SERIES = 'series', _('сериал')
@@ -60,8 +66,8 @@ class FilmWork(TimeStampedModel):
     file_path = models.FileField(_('файл'), upload_to='film_works/', null=True, blank=True)
     rating = models.FloatField(_('рейтинг'), validators=[MinValueValidator(0)], null=True, blank=True)
     type = models.TextField(_('тип'), choices=FilmWorkType.choices, blank=True)
-    genres = models.ManyToManyField('movies.Genre', through='movies.GenreFilmWork')
-    persons = models.ManyToManyField('movies.Person', through='movies.PersonFilmWork')
+    genres = models.ManyToManyField('Genre', through='GenreFilmWork')
+    persons = models.ManyToManyField('Person', through='FilmWorkPerson')
     created_at = AutoCreatedField(_('дата создания'))
     updated_at = AutoLastModifiedField(_('дата последнего изменения'))
 
@@ -74,16 +80,10 @@ class FilmWork(TimeStampedModel):
         return self.title
 
 
-class RoleType(models.TextChoices):
-    ACTOR = 'actor', _('актер')
-    WRITER = 'writer', _('сценарист')
-    DIRECTOR = 'director', _('режиссер')
-
-
 class FilmWorkPerson(models.Model):
     id = models.UUIDField(_('id'), primary_key=True, default=uuid.uuid4, editable=False)
-    film_work = models.ForeignKey('movies.FilmWork', on_delete=models.CASCADE)
-    person = models.ForeignKey('movies.Person', on_delete=models.CASCADE)
+    film_work = models.ForeignKey('FilmWork', on_delete=models.CASCADE)
+    person = models.ForeignKey('Person', on_delete=models.CASCADE)
     role = models.TextField(_('роль'), choices=RoleType.choices)
     created_at = AutoCreatedField(_('дата создания'))
 
@@ -96,8 +96,8 @@ class FilmWorkPerson(models.Model):
 
 class GenreFilmWork(models.Model):
     id = models.UUIDField(_('id'), primary_key=True, default=uuid.uuid4, editable=False)
-    film_work = models.ForeignKey('movies.FilmWork', on_delete=models.CASCADE)
-    genre = models.ForeignKey('movies.Genre', on_delete=models.CASCADE)
+    film_work = models.ForeignKey('FilmWork', on_delete=models.CASCADE)
+    genre = models.ForeignKey('Genre', on_delete=models.CASCADE)
     created_at = AutoCreatedField(_('дата создания'))
 
     class Meta:

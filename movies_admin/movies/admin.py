@@ -1,32 +1,44 @@
 from django.contrib import admin
+from .models import FilmWork, Person, Genre
 
-from .models import FilmWork, FilmWorkPerson, Genre, Person
+
+class PersonInLineAdmin(admin.TabularInline):
+    model = FilmWork.persons.through
+    extra = 0
 
 
-class PersonRoleInline(admin.TabularInline):
-    model = FilmWorkPerson
+class GenreInLineAdmin(admin.TabularInline):
+    model = FilmWork.genres.through
     extra = 0
 
 
 @admin.register(FilmWork)
 class FilmWorkAdmin(admin.ModelAdmin):
     list_display = ('title', 'type', 'creation_date', 'rating')
-    list_filter = ('type', 'rating')
-    search_fields = ('title', 'description', 'id')
+    fields = (
+        'title',
+        'type',
+        'description',
+        'creation_date',
+        'rating',
+        'certificate',
+        'file_path'
+    )
+    inlines = (PersonInLineAdmin, GenreInLineAdmin)
+    search_fields = ('title', 'description', 'type', 'genres')
 
-    fields = ('title', 'type', 'description', 'creation_date', 'certificate',
-              'file_path', 'mpaa_rating', 'rating', 'genres')
 
-    inlines = [PersonRoleInline]
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'birth_date')
+    fields = ('full_name', 'birth_date')
+    inlines = (PersonInLineAdmin, )
+    search_fields = ('full_name', 'birth_date')
 
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
+    fields = ('name', 'description')
+    inlines = (GenreInLineAdmin, )
     search_fields = ('name', 'description')
-
-
-@admin.register(Person)
-class PersonAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'birthdate')
-    search_fields = ('full_name',)
