@@ -21,11 +21,3 @@ def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
 if __name__ == '__main__':
     with sqlite3.connect('db.sqlite') as sqlite_conn, psycopg2.connect(**dsl, cursor_factory=DictCursor) as pg_conn:
         load_from_sqlite(sqlite_conn, pg_conn)
-
-'''
-docker run -d --rm \
-  -p 5432:5432 \
-  --name postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  postgres:13 
-'''
