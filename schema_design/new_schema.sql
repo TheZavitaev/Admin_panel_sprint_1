@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS content.film_work (
     certificate TEXT,
     mpaa_rating content.film_mpaa_rating_type,
     file_path TEXT,
-    imdb_rating NUMERIC(2,1) CHECK (imdb_rating > 0),
+    imdb_rating NUMERIC(2,1) CHECK (imdb_rating >= 0,0),
     type content.film_work_types,
     created_at TIMESTAMP with time zone,
     updated_at TIMESTAMP with time zone
@@ -59,3 +59,6 @@ CREATE TABLE IF NOT EXISTS content.film_work_person (
     role content.film_team_role,
     UNIQUE (film_work_id, person_id, role)
 );
+
+-- Создаем индекс
+CREATE INDEX film_work_creation_date_idx ON content.film_work(creation_date);
