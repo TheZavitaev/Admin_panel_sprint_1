@@ -1,7 +1,7 @@
 import random
 
 from django.core.management.base import BaseCommand
-from django.db import transaction, IntegrityError
+from django.db import IntegrityError
 from tqdm import tqdm
 
 from movies.factories import FilmWorkFactory, PersonFactory, GenreFactory
