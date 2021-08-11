@@ -1,34 +1,13 @@
-import random
+import datetime
+from random import randint
 
 import factory
+from factory import Faker, fuzzy
 from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyChoice
+from pytz import UTC
 
-from .models import Person, Genre, FilmWork, FilmWorkPerson, GenreFilmWork, MPAARatingType, FilmWorkType, RoleType
-
-# See the list of factory providers at
-# https://faker.readthedocs.io/en/stable/providers.html
-
-
-description = factory.Faker(
-        'sentence',
-        nb_words=128,
-        variable_nb_words=True
-    )
-customer_name = factory.Faker("name")
-customer_address = factory.Faker("address")
-creation_date = factory.Faker("date")
-factory.Faker('catch_phrase')
-name = factory.Faker('company')
-
-
-class PersonFactory(DjangoModelFactory):
-    class Meta:
-        model = Person
-
-    full_name = factory.Faker('name')
-    birth_date = factory.Faker('date')
-    created_at = factory.Faker('date')
+from movies.models import FilmWork, MPAARatingType, FilmWorkType
+from .models import Person, Genre
 
 
 class GenreFactory(DjangoModelFactory):
@@ -37,41 +16,33 @@ class GenreFactory(DjangoModelFactory):
 
     name = factory.Faker('company')
     description = factory.Faker('sentence', nb_words=128, variable_nb_words=True)
-    created_at = factory.Faker('date')
+    created_at = fuzzy.FuzzyDateTime(start_dt=datetime.datetime(1940, 1, 1, tzinfo=UTC))
 
 
 class FilmWorkFactory(DjangoModelFactory):
     class Meta:
         model = FilmWork
 
-    title = factory.Faker('company')
-    description = factory.Faker('sentence', nb_words=128, variable_nb_words=True)
-    creation_date = factory.Faker('date')
-    certificate = factory.Faker('company')
-    mpaa_rating = FuzzyChoice(MPAARatingType)
-    file_path = factory.Faker('name')
-    rating = factory.LazyAttribute(random.randrange(0, 11))
-    type = FuzzyChoice(FilmWorkType)
-    genres = factory.Faker('company')
-    persons = factory.Faker('name')
-    created_at = factory.Faker('date')
-    updated_at = factory.Faker('date')
+    id = Faker('uuid4')
+    title = Faker('company')
+    description = Faker('sentence', nb_words=128, variable_nb_words=True)
+    creation_date = fuzzy.FuzzyDateTime(start_dt=datetime.datetime(2000, 1, 1, tzinfo=UTC))
+    certificate = Faker('company')
+    mpaa_rating = fuzzy.FuzzyChoice(MPAARatingType)
+    rating = fuzzy.FuzzyDecimal(0, 9.9)
+    type = fuzzy.FuzzyChoice(FilmWorkType)
+    genres = factory.RelatedFactoryList(
+        GenreFactory,
+        size=randint(1, 4),
+    )
+    created_at = fuzzy.FuzzyDateTime(start_dt=datetime.datetime(1940, 1, 1, tzinfo=UTC))
+    updated_at = fuzzy.FuzzyDateTime(start_dt=datetime.datetime(1940, 1, 1, tzinfo=UTC))
 
 
-class FilmWorkPersonFactory(DjangoModelFactory):
+class PersonFactory(DjangoModelFactory):
     class Meta:
-        model = FilmWorkPerson
+        model = Person
 
-    film_work = factory.SubFactory(FilmWorkFactory)
-    person = factory.Faker('name')
-    role = FuzzyChoice(RoleType)
-    created_at = factory.Faker('date')
-
-
-class GenreFilmWorkFactory(DjangoModelFactory):
-    class Meta:
-        model = GenreFilmWork
-
-    film_work = factory.SubFactory(FilmWorkFactory)
-    genre = factory.SubFactory(GenreFactory)
-    created_at = factory.Faker('date')
+    full_name = factory.Faker('name')
+    birth_date = fuzzy.FuzzyDateTime(start_dt=datetime.datetime(1940, 1, 1, tzinfo=UTC))
+    created_at = fuzzy.FuzzyDateTime(start_dt=datetime.datetime(1940, 1, 1, tzinfo=UTC))

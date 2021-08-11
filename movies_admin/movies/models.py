@@ -60,7 +60,7 @@ class FilmWork(TimeStampedModel):
     id = models.UUIDField(_('id'), primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(_('название'), max_length=255)
     description = models.TextField(_('описание'), blank=True)
-    creation_date = models.DateField(_('дата создания фильма'), null=True, blank=True)
+    creation_date = models.DateField(_('дата создания фильма'), null=True, blank=True, db_index=True)
     certificate = models.TextField(_('сертификат'), blank=True, null=True)
     mpaa_rating = models.CharField(_('возрастной рейтинг'), choices=MPAARatingType.choices, null=True, max_length=50)
     file_path = models.FileField(_('файл'), upload_to='film_works/', null=True, blank=True)

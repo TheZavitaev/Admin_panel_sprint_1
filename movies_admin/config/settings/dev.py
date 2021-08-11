@@ -26,7 +26,7 @@ DATABASES = {
         'HOST': os.getenv('host'),
         'PORT': os.getenv('port'),
         'OPTIONS': {
-            'options': '-c search_path=public,content',
+            'options': '-c search_path=content,public',
         }
     }
 }
