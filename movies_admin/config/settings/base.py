@@ -1,8 +1,13 @@
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
-SECRET_KEY = 'w!!n-wjvcvsnty#!u+vyq3*ku6k-ure-c3n8^w3u%sml(2)9i('
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = False
 
@@ -62,6 +67,20 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('dbname'),
+        'USER': os.getenv('user'),
+        'PASSWORD': os.getenv('password'),
+        'HOST': os.getenv('host'),
+        'PORT': os.getenv('port'),
+        'OPTIONS': {
+            'options': '-c search_path=content,public',
+        }
+    }
+}
 
 LANGUAGE_CODE = 'en-us'
 

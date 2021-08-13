@@ -5,8 +5,14 @@ from psycopg2.extensions import connection as _connection
 from psycopg2.extras import DictCursor
 
 from config import dsl
-from sqlite_to_postgres.utils.postgres_saver import PostgresSaver
-from sqlite_to_postgres.utils.sqlite_loader import SQLiteLoader
+
+# у меня относительные импорты в данной сборке работать отказываются
+try:
+    from .utils.sqlite_loader import SQLiteLoader
+    from .utils.postgres_saver import PostgresSaver
+except ImportError:
+    from utils.sqlite_loader import SQLiteLoader
+    from utils.postgres_saver import PostgresSaver
 
 
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
