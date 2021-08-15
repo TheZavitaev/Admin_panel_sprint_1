@@ -26,12 +26,12 @@ class FilmWorkAdmin(admin.ModelAdmin):
             }
         ),
         ('Advanced options', {
-            'fields': {
+            'fields': (
                 'creation_date',
                 'rating',
                 'certificate',
                 'file_path',
-            }
+            )
         }
          ),
     )
